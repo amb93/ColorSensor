@@ -1,0 +1,3 @@
+[submodule "VEML3328"]
+	path = VEML3328
+	url = https://github.com/DevelopiumTech/VEML3328.git
