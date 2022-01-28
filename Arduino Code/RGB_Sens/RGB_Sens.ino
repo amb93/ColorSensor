@@ -56,6 +56,7 @@ char incomingByte = '1';
 float Red;
 float Green;
 float Blue;
+float Hue;
 
 void setup() {
   Serial.begin(9600);
@@ -97,15 +98,49 @@ void loop() {
   Red = float(RGBCIR.getRed())/R_Cal;
   Green = float(RGBCIR.getGreen())/G_Cal;
   Blue = float(RGBCIR.getBlue())/B_Cal;
+  Hue = RGB2H(Red,Green,Blue);
   
-  Serial.print(Blue*255);   //read blue channel
+  /*Serial.print(Blue*255);   //read blue channel
   Serial.print(','); 
   Serial.print(Red*255);    //read red channel
   Serial.print(',');  
-  Serial.println(Green*255);  //read green channel
+  Serial.print(Green*255);  //read green channel
+  Serial.print(','); */ 
+  Serial.println(Hue);  //read green channel 
   //Serial.print(',');  
   //Serial.print(RGBCIR.getClear());  //read clear channel
   //Serial.print(',');  
   //Serial.println(RGBCIR.getIR());   //read IR channel
   delay(50);
+}
+
+float RGB2H(float r,float g,float b)
+{
+  float Cmax = max(max(r,g),b);
+  float Cmin = min(min(r,g),b);
+  float diff = Cmax - Cmin;
+  float h;
+  if (diff == 0)
+  {
+    return 0;
+  }
+  else if (Cmax == r)
+  {
+    h = (g - b) / diff ;
+     
+  }
+  else if (Cmax == g)
+  {
+     h = 2.0 + (b - r) / diff ;
+     
+  }
+
+    else if (Cmax == b)
+  {
+     h = 4.0 + (r - g) / diff ;
+  }
+  h *= 60.0; 
+  if (h<0.0) h +=360.0;
+  
+  return h;
 }
