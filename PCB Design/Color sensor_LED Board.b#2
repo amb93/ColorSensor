@@ -80,7 +80,7 @@
 <text x="-8.763" y="-1.27" size="1.778" layer="25" font="vector">B</text>
 <text x="2.794" y="6.096" size="1.778" layer="25" font="vector">G</text>
 <text x="-8.128" y="1.143" size="1.778" layer="26" font="vector" rot="MR0">B</text>
-<text x="4.953" y="-7.239" size="1.778" layer="26" font="vector" rot="MR0">R</text>
+<text x="4.191" y="-7.62" size="1.778" layer="26" font="vector" rot="MR0">R</text>
 <text x="5.207" y="6.477" size="1.778" layer="26" font="vector" rot="MR0">G</text>
 <text x="0" y="7.239" size="0.6096" layer="26" rot="MR0" align="center">COLOR SENSOR
 LED MODULE</text>

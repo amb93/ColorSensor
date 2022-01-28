@@ -76,7 +76,7 @@
 <plain>
 <circle x="0" y="0" radius="5" width="0.001" layer="20"/>
 <circle x="0" y="0" radius="10" width="0.001" layer="20"/>
-<text x="3.81" y="-7.239" size="1.778" layer="25" font="vector">R</text>
+<text x="7.62" y="-1.905" size="1.778" layer="25" font="vector">R</text>
 <text x="-8.763" y="-1.27" size="1.778" layer="25" font="vector">B</text>
 <text x="2.794" y="6.096" size="1.778" layer="25" font="vector">G</text>
 <text x="-8.128" y="1.143" size="1.778" layer="26" font="vector" rot="MR0">B</text>
