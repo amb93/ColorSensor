@@ -57,6 +57,8 @@ float Red;
 float Green;
 float Blue;
 float Hue;
+float Val;
+float Sat;
 
 void setup() {
   Serial.begin(9600);
@@ -99,13 +101,13 @@ void loop() {
   Green = float(RGBCIR.getGreen())/G_Cal;
   Blue = float(RGBCIR.getBlue())/B_Cal;
   Hue = RGB2H(Red,Green,Blue);
+  Val = RGB2V(Red,Green,Blue);
+  Sat = RGB2S(Red,Green,Blue);
   
-  /*Serial.print(Blue*255);   //read blue channel
+  Serial.print(Sat*255);   //read blue channel
   Serial.print(','); 
-  Serial.print(Red*255);    //read red channel
+  Serial.print(Val*255);    //read red channel
   Serial.print(',');  
-  Serial.print(Green*255);  //read green channel
-  Serial.print(','); */ 
   Serial.println(Hue);  //read green channel 
   //Serial.print(',');  
   //Serial.print(RGBCIR.getClear());  //read clear channel
@@ -143,4 +145,26 @@ float RGB2H(float r,float g,float b)
   if (h<0.0) h +=360.0;
   
   return h;
+}
+
+float RGB2S(float r,float g,float b)
+{
+  float Cmax = max(max(r,g),b);
+  float Cmin = min(min(r,g),b);
+  float diff = Cmax - Cmin;
+  float S;
+  float V;
+  V = Cmax;
+  S =   (Cmax-Cmin)/Cmax;
+  if (V==0) S=0;
+  
+  return S;
+}
+
+float RGB2V(float r,float g,float b)
+{
+  float Cmax = max(max(r,g),b);
+  float V;
+  V = Cmax;
+  return V;
 }
