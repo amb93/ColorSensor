@@ -44,76 +44,77 @@ SOFTWARE.
 
 #include "Wire.h"
 #include "VEML3328.h"
+#include <U8g2lib.h>
+#include <SD.h>                      // need to include the SD library
+#define SD_ChipSelectPin 4  //using digital pin 4 on arduino nano 328, can use other pins
+#include <TMRpcm.h>           //  also need to include this library...
+#include <SPI.h>
+
+#define white "white.wav"
+#define black "black.wav"
+#define red "red.wav"
+#define orange "orange.wav"
+#define yellow "yellow.wav"
+#define green "green.wav"
+#define cyan "cyan.wav"
+#define blue "blue.wav"
+#define purple "purple.wav"
+
+
+TMRpcm tmrpcm;   // create an object for use in this sketch
+
+
 
 VEML3328 RGBCIR;
 
-float R_Cal=1.0;
-float G_Cal=1.0;
-float B_Cal=1.0;
-
-char incomingByte = '1';
-
-float Red;
-float Green;
-float Blue;
-float Hue;
-float Val;
-float Sat;
+float R_cal = 1.0;
+float G_cal = 1.0;
+float B_cal = 1.0;
 
 void setup() {
-  Serial.begin(9600);
-  pinMode(4,OUTPUT);
-  digitalWrite(4,HIGH);
-  Wire.begin(); 
-  if(!RGBCIR.begin()) {
-    Serial.println("ERROR: couldn't detect the sensor");
-    while(1){}
-  }
-  Serial.println("Vishay VEML3328 RGBCIR color sensor");
-  RGBCIR.Enable(); 
-  RGBCIR.setGain(4);
-  RGBCIR.setSensitivity(high_sens);
-  RGBCIR.setDG(1);
-  RGBCIR.setIntegrationTime(IT_50MS);
 
-  delay(1000);
+  Wire.begin();
+  tmrpcm.speakerPin = 9; //5,6,11 or 46 on Mega, 9 on Uno, Nano, etc 
+
+  
+  //Serial.println("Vishay VEML3328 RGBCIR color sensor");
+  RGBCIR.Enable(); 
+  RGBCIR.setGain(1);
+  RGBCIR.setSensitivity(high_sens);
+  RGBCIR.setDG(4);
+  RGBCIR.setIntegrationTime(IT_400MS);
+
+  SD.begin(SD_ChipSelectPin);
+
+ OLED_Print("Hello");
+ tmrpcm.play("welcome.wav");
+ 
+ delay(5000);
+
+R_cal = RGBCIR.getRed();
+G_cal = RGBCIR.getGreen();
+B_cal = RGBCIR.getBlue();
+
 }
 
 void loop() {
-
-   if (Serial.available() > 0) {
-    // read the incoming byte:
-    incomingByte = Serial.read();
-
-    // say what you got:
-      if (incomingByte == '0')
-      {
-        R_Cal = RGBCIR.getRed();
-        G_Cal = RGBCIR.getGreen();
-        B_Cal = RGBCIR.getBlue();
-      }
-  }
   
   // Use the arduino's serial plotter
 
   
-  Red = float(RGBCIR.getRed())/R_Cal;
-  Green = float(RGBCIR.getGreen())/G_Cal;
-  Blue = float(RGBCIR.getBlue())/B_Cal;
-  Hue = RGB2H(Red,Green,Blue);
-  Val = RGB2V(Red,Green,Blue);
-  Sat = RGB2S(Red,Green,Blue);
-  
-  Serial.print(Sat*255);   //read blue channel
-  Serial.print(','); 
-  Serial.print(Val*255);    //read red channel
-  Serial.print(',');  
-  Serial.println(Hue);  //read green channel 
-  //Serial.print(',');  
-  //Serial.print(RGBCIR.getClear());  //read clear channel
-  //Serial.print(',');  
-  //Serial.println(RGBCIR.getIR());   //read IR channel
-  delay(50);
+ float Red = RGBCIR.getRed()/R_cal;
+ float Green = RGBCIR.getGreen()/G_cal;
+ float Blue = RGBCIR.getBlue()/B_cal;
+ 
+ float Hue = RGB2H(Red,Green,Blue);
+ float Val = RGB2V(Red,Green,Blue);
+ float Sat = RGB2S(Red,Green,Blue);
+
+  String color = colorDetect(Hue,255*Sat,255*Val);
+  OLED_Print(color);
+  String filename = color + ".wav";
+  tmrpcm.play(filename.c_str());
+  delay(500);
 }
 
 float RGB2H(float r,float g,float b)
@@ -167,4 +168,52 @@ float RGB2V(float r,float g,float b)
   float V;
   V = Cmax;
   return V;
+}
+
+String colorDetect(float H,float S,float V)
+{
+  if (S<20)
+  {
+    return "white";
+  }
+  else if (V<20)
+  {
+    return "black";
+  }
+  else if (H<=40)
+  {
+    return "red";
+  }
+  else if (H<=65)
+  {
+    return "yellow";
+  }
+  else if (H<=160)
+  {
+    return "green";
+  }
+  else if (H<=210)
+  {
+    return "cyan";
+  }
+  else if (H<=270)
+  {
+    return "blue";
+  }
+  else if (H>270)
+  {
+    return "purple";
+  }
+
+}
+
+void OLED_Print(String out)
+{
+  U8G2_SSD1306_128X32_UNIVISION_F_HW_I2C u8g2(U8G2_R0); 
+  u8g2.begin();
+  
+  u8g2.clearBuffer();          // clear the internal memory
+  u8g2.setFont(u8g2_font_logisoso28_tr);  // choose a suitable font at https://github.com/olikraus/u8g2/wiki/fntlistall
+  u8g2.drawStr(8,29,out.c_str());  // write something to the internal memory
+  u8g2.sendBuffer();         // transfer internal memory to the display
 }
