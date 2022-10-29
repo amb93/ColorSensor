@@ -10,6 +10,7 @@ A compact device that helps the blind and color blind to differentiate between c
 ![LED_Board](Gallery/LED_board.jpg)
 ![WIP](Gallery/WIP.jpg)
 ![SD_card](Gallery/SD_Card.jpg)
+![ports](Gallery/Ports.jpg)
 ![Full](Gallery/Finished_Sensor_1.jpg)
 ![Full](Gallery/Finished_Sensor_3.jpg)
 
