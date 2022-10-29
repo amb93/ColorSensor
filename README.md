@@ -6,7 +6,7 @@ A compact device that helps the blind and color blind to differentiate between c
 # Work progress
 ![Design](Gallery/CAD.jpg)
 ![Sensor_board](Gallery/Sensor_first_run.jpg)
-![assembly](Gallery/first__assembly.jpg)
+![assembly](Gallery/First__assembly.jpg)
 ![LED_Board](Gallery/LED_board.jpg)
 ![WIP](Gallery/WIP.jpg)
 ![SD_card](Gallery/SD_Card.jpg)
